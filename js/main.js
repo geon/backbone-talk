@@ -45,16 +45,44 @@ var Clickies = Backbone.Collection.extend({
 });
 
 
+var ClickiesView = Backbone.View.extend({
+
+	events: {
+		'click button.add-clicky': 'onClick'
+	},
+
+	onClick: function () {
+
+		var clicky = new Clicky();
+		this.collection.add(clicky);
+	},
+
+	initialize: function () {
+
+		this.listenTo(this.collection, 'add', this.onAdd, this);
+		this.collection.each(this.onAdd, this);
+
+		var addButton = document.createElement('button');
+		addButton.innerText = 'Add Clicky';
+		addButton.className = 'add-clicky';
+		this.el.appendChild(addButton);
+	},
+
+	onAdd: function (model) {
+
+		var clickyView = new ClickyView({
+			model: model
+		});
+		this.el.appendChild(clickyView.el);
+	}
+});
+
+
 var body = document.getElementsByTagName('body')[0];
 
 var clickies = new Clickies();
 
-for (var i=0; i<3; ++i) {
-
-	var clicky = new Clicky();
-	clickies.add(clicky);
-	var clickyView = new ClickyView({
-		model: clicky
-	});
-	body.appendChild(clickyView.el);
-}
+var clickiesView = new ClickiesView({
+	el: body,
+	collection: clickies
+});
