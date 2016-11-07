@@ -40,14 +40,21 @@ var Clicky = Backbone.Model.extend({
 });
 
 
+var Clickies = Backbone.Collection.extend({
+	model: Clicky
+});
+
+
 var body = document.getElementsByTagName('body')[0];
 
-var clicky = new Clicky();
-var clickyView = new ClickyView({
-	model: clicky
-});
-body.appendChild(clickyView.el);
+var clickies = new Clickies();
 
-setInterval(function () {
-	clicky.click();
-}, 2000);
+for (var i=0; i<3; ++i) {
+
+	var clicky = new Clicky();
+	clickies.add(clicky);
+	var clickyView = new ClickyView({
+		model: clicky
+	});
+	body.appendChild(clickyView.el);
+}
